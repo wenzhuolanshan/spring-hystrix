@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds" packagingData="true" debug="false" 
+    xmlns="http://ch.qos.logback/xml/ns/logback"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://ch.qos.logback/xml/ns/logback
+        https://raw.githubusercontent.com/enricopulatzo/logback-XSD/master/src/main/xsd/logback.xsd">
+    
+    <property resource="application.properties" />
+    
+    <if condition='"${spring.profiles.active}".equals("sct")'>
+        <then>
+            <include resource="logconfigs/logback-sct.xml" />
+        </then>
+    </if>
+    
+    <if condition='"${spring.profiles.active}".equals("prod")'>
+        <then>
+            <include resource="logconfigs/logback-prod.xml" />
+        </then>
+    </if>
+    
+</configuration>
