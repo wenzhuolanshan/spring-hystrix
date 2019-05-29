@@ -23,7 +23,7 @@ public class HelloService {
         final String method = "QueryPhone";
         LogUtil.logEntry(method, LOGGER);
 
-        Observable<PhoneResponse> resp = client.QueryPhoneDetail(phoneNum).map(PhoneResponse::builder);
+        Observable<PhoneResponse> resp = client.QueryPhoneDetail(phoneNum).map(PhoneResponse::builderByMap);
 
         LogUtil.logExit(method, LOGGER);
         return resp;

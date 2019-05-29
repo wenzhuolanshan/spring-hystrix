@@ -1,5 +1,6 @@
 package com.example.demo.client;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status.Family;
 import javax.ws.rs.core.UriBuilder;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.glassfish.jersey.client.rx.RxClient;
 import org.glassfish.jersey.client.rx.RxWebTarget;
 import org.glassfish.jersey.client.rx.rxjava.RxObservableInvoker;
@@ -19,6 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.bean.ResponseInfo;
 import com.example.demo.util.LogUtil;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
@@ -50,7 +53,13 @@ public class PhoneClient {
     }
 
     public Observable<Map<String, Object>> QueryPhoneDetailFallback(String phoneNum, Throwable throwable) {
+        final String method = "QueryPhoneDetailFallback";
         // Need return a error data.
+        try {
+            BeanUtils.describe(ResponseInfo.builder().code("ERR001").message("fallback data").build());
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            LogUtil.logError(method, "", e, LOGGER);
+        }
         return Observable.just(new HashMap<String, Object>());
     }
 
@@ -70,6 +79,8 @@ public class PhoneClient {
             jsonResult = response.readEntity(new GenericType<Map<String, Object>>() {});
         } else {
             LogUtil.logWarn(method, String.format("Return contentType is invalid=%s", contentType), LOGGER);
+            // The demo link is special. ^_^....
+            jsonResult = response.readEntity(new GenericType<Map<String, Object>>() {});
         }
 
         if (null != response.getStatusInfo() && !Family.SUCCESSFUL.equals(response.getStatusInfo().getFamily())) {
