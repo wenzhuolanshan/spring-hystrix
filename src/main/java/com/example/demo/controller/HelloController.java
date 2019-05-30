@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.bean.phone.GetZoneResult;
 import com.example.demo.model.PhoneResponse;
 import com.example.demo.service.HelloService;
 import com.example.demo.util.LogUtil;
@@ -31,6 +32,17 @@ public class HelloController {
         LogUtil.logDebug(method, "health check is successfully", LOGGER);
 
         return "Successfully";
+    }
+
+    @GetMapping(value = "/dummy", produces = "application/json;charset=UTF-8")
+    public GetZoneResult dummy() {
+        return GetZoneResult.builder()
+            .mts("'1331234'")
+            .province("贵州")
+            .catName("中国电信")
+            .ispVid("138238560")
+            .telString("13312345678")
+            .build();
     }
 
     @GetMapping("/phone/{number}")

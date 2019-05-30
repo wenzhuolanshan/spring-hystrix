@@ -27,7 +27,7 @@ public class LogMDCFilter implements Filter {
         Optional<String> requestCorrelationId = Optional.ofNullable(req.getHeader(REQUEST_ID));
 
         // some container may make the header case sensitive
-        if (requestCorrelationId.isPresent()) {
+        if (!requestCorrelationId.isPresent()) {
             final Enumeration<String> headerNames = req.getHeaderNames();
             while (headerNames.hasMoreElements()) {
                 final String headerName = (String)headerNames.nextElement();
@@ -38,7 +38,7 @@ public class LogMDCFilter implements Filter {
         }
 
         // if there is still no value, generate requestId
-        if (requestCorrelationId.isPresent()) {
+        if (!requestCorrelationId.isPresent()) {
             StringBuilder uniqueKey = new StringBuilder();
             uniqueKey.append(Long.toHexString(System.currentTimeMillis()))
                 .append(Long.toHexString(Thread.currentThread().getId()))
